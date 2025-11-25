@@ -453,7 +453,7 @@ const MainPortfolio: React.FC<{ onAdminClick: () => void }> = ({ onAdminClick })
                       <p>reality.<span className="text-blue-300">render</span>({'{'}</p>
                       <p className="pl-4">mode: <span className="text-accent-400">'cinematic'</span>,</p>
                       <p className="pl-4">ai: <span className="text-purple-400">true</span></p>
-                      <p>});</p>
+                      <p>{'})'};{'}'}</p>
                     </div>
                   </div>
 
@@ -511,7 +511,7 @@ const MainPortfolio: React.FC<{ onAdminClick: () => void }> = ({ onAdminClick })
             >
               <div className="aspect-[3/4] rounded-sm overflow-hidden relative grayscale hover:grayscale-0 transition-all duration-700">
                  <img 
-                   src="https://picsum.photos/800/1000?random=5" 
+                   src="/avatar.png" 
                    alt="Profile" 
                    className="w-full h-full object-cover"
                  />
