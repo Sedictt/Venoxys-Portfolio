@@ -2,6 +2,8 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import { PortfolioData, Project } from '../types';
 import { PORTFOLIO_DATA } from '../constants';
+import { db } from '../services/firebase';
+import { collection, getDocs, addDoc, updateDoc, deleteDoc, doc, setDoc } from 'firebase/firestore';
 
 interface PortfolioContextType {
   data: PortfolioData;
@@ -9,49 +11,105 @@ interface PortfolioContextType {
   addProject: (project: Project) => void;
   deleteProject: (projectId: string) => void;
   resetData: () => void;
+  isLoading: boolean;
 }
 
 const PortfolioContext = createContext<PortfolioContextType | undefined>(undefined);
 
 export const PortfolioProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  // Initialize state from LocalStorage or fallback to constants
-  const [data, setData] = useState<PortfolioData>(() => {
-    const saved = localStorage.getItem('portfolio_data');
-    return saved ? JSON.parse(saved) : PORTFOLIO_DATA;
-  });
+  const [data, setData] = useState<PortfolioData>(PORTFOLIO_DATA);
+  const [isLoading, setIsLoading] = useState(true);
 
-  // Save to LocalStorage whenever data changes
+  // Load projects from Firestore on mount
   useEffect(() => {
-    localStorage.setItem('portfolio_data', JSON.stringify(data));
-  }, [data]);
+    const loadProjects = async () => {
+      try {
+        const projectsCollection = collection(db, 'projects');
+        const snapshot = await getDocs(projectsCollection);
+        const projects = snapshot.docs.map(doc => ({
+          ...doc.data(),
+          id: doc.id
+        })) as Project[];
+        
+        setData(prev => ({
+          ...prev,
+          projects
+        }));
+      } catch (error) {
+        console.error('Error loading projects from Firestore:', error);
+        // Fall back to default data if there's an error
+      } finally {
+        setIsLoading(false);
+      }
+    };
 
-  const addProject = (project: Project) => {
-    setData(prev => ({
-      ...prev,
-      projects: [project, ...prev.projects]
-    }));
+    loadProjects();
+  }, []);
+
+  const addProject = async (project: Project) => {
+    try {
+      const projectsCollection = collection(db, 'projects');
+      const docRef = await addDoc(projectsCollection, project);
+      
+      // Update local state
+      setData(prev => ({
+        ...prev,
+        projects: [{ ...project, id: docRef.id }, ...prev.projects]
+      }));
+    } catch (error) {
+      console.error('Error adding project:', error);
+    }
   };
 
-  const updateProject = (updatedProject: Project) => {
-    setData(prev => ({
-      ...prev,
-      projects: prev.projects.map(p => p.id === updatedProject.id ? updatedProject : p)
-    }));
+  const updateProject = async (updatedProject: Project) => {
+    try {
+      const projectRef = doc(db, 'projects', updatedProject.id);
+      await updateDoc(projectRef, updatedProject as any);
+      
+      // Update local state
+      setData(prev => ({
+        ...prev,
+        projects: prev.projects.map(p => p.id === updatedProject.id ? updatedProject : p)
+      }));
+    } catch (error) {
+      console.error('Error updating project:', error);
+    }
   };
 
-  const deleteProject = (projectId: string) => {
-    setData(prev => ({
-      ...prev,
-      projects: prev.projects.filter(p => p.id !== projectId)
-    }));
+  const deleteProject = async (projectId: string) => {
+    try {
+      const projectRef = doc(db, 'projects', projectId);
+      await deleteDoc(projectRef);
+      
+      // Update local state
+      setData(prev => ({
+        ...prev,
+        projects: prev.projects.filter(p => p.id !== projectId)
+      }));
+    } catch (error) {
+      console.error('Error deleting project:', error);
+    }
   };
 
-  const resetData = () => {
-    setData(PORTFOLIO_DATA);
+  const resetData = async () => {
+    try {
+      // Delete all projects from Firestore
+      const projectsCollection = collection(db, 'projects');
+      const snapshot = await getDocs(projectsCollection);
+      
+      for (const doc of snapshot.docs) {
+        await deleteDoc(doc.ref);
+      }
+      
+      // Reset to default data
+      setData(PORTFOLIO_DATA);
+    } catch (error) {
+      console.error('Error resetting data:', error);
+    }
   };
 
   return (
-    <PortfolioContext.Provider value={{ data, addProject, updateProject, deleteProject, resetData }}>
+    <PortfolioContext.Provider value={{ data, addProject, updateProject, deleteProject, resetData, isLoading }}>
       {children}
     </PortfolioContext.Provider>
   );
