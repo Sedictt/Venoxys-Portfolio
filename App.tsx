@@ -210,6 +210,25 @@ const App: React.FC = () => {
 
   const toggleMenu = () => setIsMenuOpen(!isMenuOpen);
 
+  // Smooth Scroll Handler
+  const handleNavClick = (e: React.MouseEvent<HTMLAnchorElement>, href: string) => {
+    e.preventDefault();
+    const targetId = href.substring(1);
+    const element = document.getElementById(targetId);
+    if (element) {
+      const headerOffset = 100; // Account for fixed header (approx 96px)
+      const elementPosition = element.getBoundingClientRect().top;
+      const offsetPosition = elementPosition + window.scrollY - headerOffset;
+
+      window.scrollTo({
+        top: offsetPosition,
+        behavior: 'smooth'
+      });
+      
+      setIsMenuOpen(false);
+    }
+  };
+
   // Filter skills logic
   const getFilteredSkills = () => {
     if (activeSkillTab === 'All') return PORTFOLIO_DATA.skills;
@@ -314,7 +333,7 @@ const App: React.FC = () => {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between h-24">
             <div className="flex-shrink-0 flex items-center gap-3">
-              <a href="#home" className="text-2xl font-bold text-white tracking-tighter font-display">
+              <a href="#home" onClick={(e) => handleNavClick(e, '#home')} className="text-2xl font-bold text-white tracking-tighter font-display">
                 {PORTFOLIO_DATA.name.split(' ')[0]}<span className="text-primary-500">.</span>
               </a>
             </div>
@@ -326,6 +345,7 @@ const App: React.FC = () => {
                   <a
                     key={link.name}
                     href={link.href}
+                    onClick={(e) => handleNavClick(e, link.href)}
                     className={`text-sm font-medium transition-all duration-300 relative group ${
                       activeSection === link.href.substring(1)
                         ? 'text-primary-400'
@@ -359,7 +379,7 @@ const App: React.FC = () => {
                 <a
                   key={link.name}
                   href={link.href}
-                  onClick={() => setIsMenuOpen(false)}
+                  onClick={(e) => handleNavClick(e, link.href)}
                   className="block px-3 py-2 rounded-md text-base font-medium text-gray-300 hover:text-white hover:bg-gray-800"
                 >
                   {link.name}
@@ -397,7 +417,7 @@ const App: React.FC = () => {
               </p>
 
               <div className="flex flex-wrap gap-6 pt-4">
-                <a href="#projects" className="group flex items-center gap-3 text-white border-b border-primary-500 pb-1 hover:text-primary-400 transition-colors">
+                <a href="#projects" onClick={(e) => handleNavClick(e, '#projects')} className="group flex items-center gap-3 text-white border-b border-primary-500 pb-1 hover:text-primary-400 transition-colors">
                   Explore Work
                   <ArrowRight className="w-5 h-5 transform group-hover:translate-x-1 transition-transform" />
                 </a>
