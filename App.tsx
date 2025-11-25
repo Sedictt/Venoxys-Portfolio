@@ -430,7 +430,7 @@ const App: React.FC = () => {
                       <p>reality.<span className="text-blue-300">render</span>({'{'}</p>
                       <p className="pl-4">mode: <span className="text-accent-400">'cinematic'</span>,</p>
                       <p className="pl-4">ai: <span className="text-purple-400">true</span></p>
-                      <p>});</p>
+                      <p>{'})'};{'}'}</p>
                     </div>
                   </div>
 
