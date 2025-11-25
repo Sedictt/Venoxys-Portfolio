@@ -5,7 +5,7 @@ export const PORTFOLIO_DATA: PortfolioData = {
   name: "Venoxy",
   title: "Creative Developer & Multimedia Artist",
   bio: "I am a multidisciplinary creator blurring the lines between technology and art. I specialize in AI-augmented workflows to accelerate development and unlock new creative possibilities. From immersive web experiences to indie games, I believe in mastering both the code and the canvas.",
-  email: "contact@venoxy.com",
+  email: "venoxyarts@gmail.com",
   location: "Philippines",
   services: [
     {
