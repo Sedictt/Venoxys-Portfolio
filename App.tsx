@@ -475,7 +475,7 @@ const App: React.FC = () => {
                      </div>
                   </div>
 
-                  {/* Layer 3: Digital Synthesis (Front) - Replaces Gemini Integration */}
+                  {/* Layer 3: Digital Synthesis (Front) */}
                   <div 
                     className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-48 h-48 bg-gray-900/90 backdrop-blur-xl border border-accent-500/50 rounded-2xl shadow-[0_0_30px_rgba(217,134,46,0.3)] flex flex-col items-center justify-center gap-3"
                     style={{ transform: `translateZ(50px) translateX(${-tilt.x}px) translateY(${-tilt.y}px)` }}
@@ -508,7 +508,7 @@ const App: React.FC = () => {
             >
               <div className="aspect-[3/4] rounded-sm overflow-hidden relative grayscale hover:grayscale-0 transition-all duration-700">
                  <img 
-                   src="https://picsum.photos/800/1000?random=5" 
+                   src="/avatar.png" 
                    alt="Profile" 
                    className="w-full h-full object-cover"
                  />
