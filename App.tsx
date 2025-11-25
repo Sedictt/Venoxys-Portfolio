@@ -7,10 +7,12 @@ import {
   Film, Camera, Gamepad2, Clapperboard, Box, Palette, Youtube,
   Smartphone, Zap, Coffee, Brush, FileText, Monitor, Image,
   Brain, Bot, Sparkles, Cpu, MessageSquare, Wand, Play, Layers, ArrowRight,
-  CheckCircle, AlertCircle, ArrowUp, GraduationCap
+  CheckCircle, AlertCircle, ArrowUp, GraduationCap, Lock
 } from 'lucide-react';
 import { PORTFOLIO_DATA, NAV_LINKS } from './constants';
 import { AIChat } from './components/AIChat';
+import { AdminDashboard } from './components/AdminDashboard';
+import { PortfolioProvider, usePortfolio } from './context/PortfolioContext';
 import { Skill, Project } from './types';
 
 // Helper to map icon names to components
@@ -96,7 +98,8 @@ const ProjectCard: React.FC<{ project: Project; index: number }> = ({ project, i
   );
 };
 
-const App: React.FC = () => {
+const MainPortfolio: React.FC<{ onAdminClick: () => void }> = ({ onAdminClick }) => {
+  const { data } = usePortfolio(); // Use context instead of constants
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [activeSection, setActiveSection] = useState('home');
   const [textIndex, setTextIndex] = useState(0);
@@ -231,10 +234,10 @@ const App: React.FC = () => {
 
   // Filter skills logic
   const getFilteredSkills = () => {
-    if (activeSkillTab === 'All') return PORTFOLIO_DATA.skills;
-    if (activeSkillTab === 'Development') return PORTFOLIO_DATA.skills.filter(s => ['Frontend', 'Backend', 'Tools'].includes(s.category));
-    if (activeSkillTab === 'AI & Intelligence') return PORTFOLIO_DATA.skills.filter(s => s.category === 'AI');
-    if (activeSkillTab === 'Creative Suite') return PORTFOLIO_DATA.skills.filter(s => s.category === 'Creative');
+    if (activeSkillTab === 'All') return data.skills;
+    if (activeSkillTab === 'Development') return data.skills.filter(s => ['Frontend', 'Backend', 'Tools'].includes(s.category));
+    if (activeSkillTab === 'AI & Intelligence') return data.skills.filter(s => s.category === 'AI');
+    if (activeSkillTab === 'Creative Suite') return data.skills.filter(s => s.category === 'Creative');
     return [];
   };
 
@@ -334,7 +337,7 @@ const App: React.FC = () => {
           <div className="flex items-center justify-between h-24">
             <div className="flex-shrink-0 flex items-center gap-3">
               <a href="#home" onClick={(e) => handleNavClick(e, '#home')} className="text-2xl font-bold text-white tracking-tighter font-display">
-                {PORTFOLIO_DATA.name.split(' ')[0]}<span className="text-primary-500">.</span>
+                {data.name.split(' ')[0]}<span className="text-primary-500">.</span>
               </a>
             </div>
             
@@ -450,7 +453,7 @@ const App: React.FC = () => {
                       <p>reality.<span className="text-blue-300">render</span>({'{'}</p>
                       <p className="pl-4">mode: <span className="text-accent-400">'cinematic'</span>,</p>
                       <p className="pl-4">ai: <span className="text-purple-400">true</span></p>
-                      <p>{'})'};{'}'}</p>
+                      <p>});</p>
                     </div>
                   </div>
 
@@ -475,7 +478,7 @@ const App: React.FC = () => {
                      </div>
                   </div>
 
-                  {/* Layer 3: Digital Synthesis (Front) */}
+                  {/* Layer 3: Digital Synthesis (Front) - Replaces Gemini Integration */}
                   <div 
                     className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-48 h-48 bg-gray-900/90 backdrop-blur-xl border border-accent-500/50 rounded-2xl shadow-[0_0_30px_rgba(217,134,46,0.3)] flex flex-col items-center justify-center gap-3"
                     style={{ transform: `translateZ(50px) translateX(${-tilt.x}px) translateY(${-tilt.y}px)` }}
@@ -508,7 +511,7 @@ const App: React.FC = () => {
             >
               <div className="aspect-[3/4] rounded-sm overflow-hidden relative grayscale hover:grayscale-0 transition-all duration-700">
                  <img 
-                   src="/avatar.png" 
+                   src="https://picsum.photos/800/1000?random=5" 
                    alt="Profile" 
                    className="w-full h-full object-cover"
                  />
@@ -535,7 +538,7 @@ const App: React.FC = () => {
                     isAboutVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'
                   }`}
                 >
-                  I'm a creative technologist based in <span className="text-white font-medium">{PORTFOLIO_DATA.location}</span>. My work exists at the intersection of technical precision and artistic expression.
+                  I'm a creative technologist based in <span className="text-white font-medium">{data.location}</span>. My work exists at the intersection of technical precision and artistic expression.
                 </p>
                 <p 
                   className={`transition-all duration-1000 delay-700 ease-bounce-out transform ${
@@ -556,7 +559,7 @@ const App: React.FC = () => {
                       <Briefcase className="w-5 h-5 text-primary-400" /> Experience
                     </h3>
                     <ul className="space-y-4 pt-2">
-                      {PORTFOLIO_DATA.experience.map((exp) => (
+                      {data.experience.map((exp) => (
                         <li key={exp.id} className="border-l border-gray-800 pl-4 hover:border-primary-500 transition-colors">
                           <p className="text-white font-medium">{exp.role}</p>
                           <p className="text-sm text-gray-500">{exp.company}</p>
@@ -569,7 +572,7 @@ const App: React.FC = () => {
                       <GraduationCap className="w-5 h-5 text-accent-400" /> Education
                     </h3>
                     <ul className="space-y-4 pt-2">
-                      {PORTFOLIO_DATA.education.map((edu) => (
+                      {data.education.map((edu) => (
                         <li key={edu.id} className="border-l border-gray-800 pl-4 hover:border-accent-500 transition-colors">
                           <p className="text-white font-medium">{edu.degree}</p>
                           <p className="text-sm text-gray-500">{edu.school}</p>
@@ -604,7 +607,7 @@ const App: React.FC = () => {
           </div>
 
           <div className="divide-y divide-gray-800 border-t border-gray-800">
-             {PORTFOLIO_DATA.services.map((service, index) => {
+             {data.services.map((service, index) => {
                const Icon = IconMap[service.iconName] || Code;
                return (
                  <div key={service.id} className="group py-12 flex flex-col md:flex-row items-start gap-8 cursor-pointer hover:bg-gray-800/20 transition-colors px-4 md:px-6 rounded-2xl">
@@ -648,7 +651,7 @@ const App: React.FC = () => {
           </div>
 
           <div className="space-y-32">
-            {PORTFOLIO_DATA.projects.map((project: Project, index) => (
+            {data.projects.map((project: Project, index) => (
               <ProjectCard key={project.id} project={project} index={index} />
             ))}
           </div>
@@ -747,12 +750,12 @@ const App: React.FC = () => {
                 </h2>
                 <div className="space-y-4 text-gray-400">
                    <p className="text-lg">Have a vision for a project? I'm currently available for freelance work and collaborations.</p>
-                   <a href={`mailto:${PORTFOLIO_DATA.email}`} className="text-2xl text-white border-b border-primary-500 pb-1 hover:text-primary-400 transition-colors inline-block">
-                     {PORTFOLIO_DATA.email}
+                   <a href={`mailto:${data.email}`} className="text-2xl text-white border-b border-primary-500 pb-1 hover:text-primary-400 transition-colors inline-block">
+                     {data.email}
                    </a>
                 </div>
                 <div className="flex gap-6 pt-4">
-                     {PORTFOLIO_DATA.socials.map((social) => {
+                     {data.socials.map((social) => {
                        const Icon = IconMap[social.iconName] || ExternalLink;
                        return (
                          <a 
@@ -864,12 +867,14 @@ const App: React.FC = () => {
       <footer className="py-12 border-t border-gray-800 relative z-10">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col md:flex-row justify-between items-center gap-4">
           <p className="text-gray-600 text-sm font-mono">
-            © {new Date().getFullYear()} {PORTFOLIO_DATA.name}
+            © {new Date().getFullYear()} {data.name}
           </p>
-          <div className="flex gap-8 text-sm text-gray-600 font-mono">
+          <div className="flex gap-8 text-sm text-gray-600 font-mono items-center">
             <a href="#" className="hover:text-white transition-colors">Twitter</a>
             <a href="#" className="hover:text-white transition-colors">LinkedIn</a>
-            <a href="#" className="hover:text-white transition-colors">Instagram</a>
+            <button onClick={onAdminClick} className="hover:text-white transition-colors flex items-center gap-1">
+               <Lock className="w-3 h-3" /> Admin
+            </button>
           </div>
         </div>
       </footer>
@@ -889,6 +894,20 @@ const App: React.FC = () => {
       </button>
 
     </div>
+  );
+};
+
+const App: React.FC = () => {
+  const [currentView, setCurrentView] = useState<'home' | 'admin'>('home');
+
+  return (
+    <PortfolioProvider>
+       {currentView === 'home' ? (
+         <MainPortfolio onAdminClick={() => setCurrentView('admin')} />
+       ) : (
+         <AdminDashboard onBack={() => setCurrentView('home')} />
+       )}
+    </PortfolioProvider>
   );
 };
 
