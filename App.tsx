@@ -1,5 +1,5 @@
-
 import React, { useState, useEffect, useRef } from 'react';
+import { AnimatePresence, motion } from 'framer-motion';
 import {
   Menu, X, Github, Linkedin, Twitter, Mail, ExternalLink,
   Code, Database, Server, PenTool, Layout, Terminal,
@@ -10,8 +10,9 @@ import {
   CheckCircle, AlertCircle, ArrowUp, GraduationCap, Lock, Quote
 } from 'lucide-react';
 import { PORTFOLIO_DATA, NAV_LINKS } from './constants';
-import { AIChat } from './components/AIChat';
+
 import { AdminDashboard } from './components/AdminDashboard';
+import { ProjectGallery } from './components/ProjectGallery';
 import { PortfolioProvider, usePortfolio } from './context/PortfolioContext';
 import { Skill, Project } from './types';
 
@@ -97,7 +98,7 @@ const ProjectCard: React.FC<{ project: Project; index: number }> = ({ project, i
   );
 };
 
-const MainPortfolio: React.FC<{ onAdminClick: () => void }> = ({ onAdminClick }) => {
+const MainPortfolio: React.FC<{ onAdminClick: () => void; onGalleryClick: () => void }> = ({ onAdminClick, onGalleryClick }) => {
   const { data } = usePortfolio(); // Use context instead of constants
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [activeSection, setActiveSection] = useState('home');
@@ -661,15 +662,28 @@ const MainPortfolio: React.FC<{ onAdminClick: () => void }> = ({ onAdminClick })
               <span className="text-primary-500 font-mono text-sm uppercase tracking-widest">Selected Works</span>
               <h2 className="text-4xl md:text-6xl font-bold text-white mt-4 font-display">Featured <br />Projects</h2>
             </div>
-            <a href="#" className="hidden md:flex items-center gap-2 text-white border-b border-white pb-1 hover:text-primary-400 hover:border-primary-400 transition-colors">
+            <button
+              onClick={onGalleryClick}
+              className="hidden md:flex items-center gap-2 text-white border-b border-white pb-1 hover:text-primary-400 hover:border-primary-400 transition-colors"
+            >
               View Archives
-            </a>
+            </button>
           </div>
 
           <div className="space-y-32">
-            {data.projects.map((project: Project, index) => (
+            {/* Show only first 3 projects in the main view */}
+            {data.projects.slice(0, 3).map((project: Project, index) => (
               <ProjectCard key={project.id} project={project} index={index} />
             ))}
+          </div>
+
+          <div className="mt-24 text-center md:hidden">
+            <button
+              onClick={onGalleryClick}
+              className="inline-flex items-center gap-2 text-white border-b border-white pb-1 hover:text-primary-400 hover:border-primary-400 transition-colors"
+            >
+              View All Projects
+            </button>
           </div>
         </div>
       </section>
@@ -891,8 +905,6 @@ const MainPortfolio: React.FC<{ onAdminClick: () => void }> = ({ onAdminClick })
         </div>
       </footer>
 
-      {/* AI Assistant */}
-      <AIChat />
 
       {/* Back to Top Button */}
       <button
@@ -903,21 +915,58 @@ const MainPortfolio: React.FC<{ onAdminClick: () => void }> = ({ onAdminClick })
       >
         <ArrowUp className="w-5 h-5" />
       </button>
-
     </div>
   );
 };
 
 const App: React.FC = () => {
-  const [currentView, setCurrentView] = useState<'home' | 'admin'>('home');
+  const [currentView, setCurrentView] = useState<'home' | 'admin' | 'gallery'>('home');
 
   return (
     <PortfolioProvider>
-      {currentView === 'home' ? (
-        <MainPortfolio onAdminClick={() => setCurrentView('admin')} />
-      ) : (
-        <AdminDashboard onBack={() => setCurrentView('home')} />
-      )}
+      <AnimatePresence mode="wait">
+        {currentView === 'home' && (
+          <motion.div
+            key="home"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0, scale: 0.98 }}
+            transition={{ duration: 0.5, ease: "easeInOut" }}
+            className="w-full"
+          >
+            <MainPortfolio
+              onAdminClick={() => setCurrentView('admin')}
+              onGalleryClick={() => setCurrentView('gallery')}
+            />
+          </motion.div>
+        )}
+
+        {currentView === 'admin' && (
+          <motion.div
+            key="admin"
+            initial={{ opacity: 0, x: '100%' }}
+            animate={{ opacity: 1, x: 0 }}
+            exit={{ opacity: 0, x: '100%' }}
+            transition={{ type: "spring", stiffness: 300, damping: 30 }}
+            className="w-full fixed inset-0 z-50 overflow-y-auto bg-gray-900"
+          >
+            <AdminDashboard onBack={() => setCurrentView('home')} />
+          </motion.div>
+        )}
+
+        {currentView === 'gallery' && (
+          <motion.div
+            key="gallery"
+            initial={{ opacity: 0, y: 50 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: 50 }}
+            transition={{ duration: 0.4, ease: "easeOut" }}
+            className="w-full fixed inset-0 z-50 overflow-y-auto bg-gray-900"
+          >
+            <ProjectGallery onBack={() => setCurrentView('home')} />
+          </motion.div>
+        )}
+      </AnimatePresence>
     </PortfolioProvider>
   );
 };
