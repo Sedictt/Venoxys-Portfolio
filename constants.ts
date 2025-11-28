@@ -124,7 +124,8 @@ export const PORTFOLIO_DATA: PortfolioData = {
       technologies: ["React", "Three.js", "WebGL", "Blender"],
       imageUrl: "https://picsum.photos/800/600?random=10",
       demoUrl: "#",
-      repoUrl: "#"
+      repoUrl: "#",
+      category: 'Applications'
     },
     {
       id: "p2",
@@ -133,7 +134,8 @@ export const PORTFOLIO_DATA: PortfolioData = {
       technologies: ["Premiere Pro", "After Effects", "DaVinci Resolve"],
       imageUrl: "https://picsum.photos/800/600?random=11",
       demoUrl: "#",
-      repoUrl: "#"
+      repoUrl: "#",
+      category: 'Video Editing'
     },
     {
       id: "p3",
@@ -142,7 +144,8 @@ export const PORTFOLIO_DATA: PortfolioData = {
       technologies: ["Next.js", "Tailwind CSS", "Framer Motion"],
       imageUrl: "https://picsum.photos/800/600?random=12",
       demoUrl: "#",
-      repoUrl: "#"
+      repoUrl: "#",
+      category: 'Applications'
     }
   ],
   socials: [

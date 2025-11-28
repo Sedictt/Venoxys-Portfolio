@@ -437,29 +437,10 @@ const MainPortfolio: React.FC<{ onAdminClick: () => void; onGalleryClick: () => 
                   transform: `rotateX(${-tilt.y}deg) rotateY(${tilt.x}deg)`
                 }}
               >
-                {/* Layer 1: Code (Back) */}
-                <div
-                  className="absolute inset-0 bg-gray-900 border border-gray-700 rounded-xl shadow-2xl transition-transform duration-200"
-                  style={{ transform: `translateZ(-50px) translateX(${tilt.x * 1.5}px) translateY(${tilt.y * 1.5}px)` }}
-                >
-                  <div className="h-6 bg-gray-800 border-b border-gray-700 flex items-center px-3 gap-1.5">
-                    <div className="w-2.5 h-2.5 rounded-full bg-red-500/50"></div>
-                    <div className="w-2.5 h-2.5 rounded-full bg-yellow-500/50"></div>
-                    <div className="w-2.5 h-2.5 rounded-full bg-green-500/50"></div>
-                  </div>
-                  <div className="p-4 font-mono text-xs text-primary-300/50 space-y-1">
-                    <p><span className="text-purple-400">const</span> <span className="text-yellow-400">reality</span> = <span className="text-blue-400">new</span> <span className="text-green-400">World</span>();</p>
-                    <p>reality.<span className="text-blue-300">render</span>({'{'}</p>
-                    <p className="pl-4">mode: <span className="text-accent-400">'cinematic'</span>,</p>
-                    <p className="pl-4">ai: <span className="text-purple-400">true</span></p>
-                    <p>{'})'};{'}'}</p>
-                  </div>
-                </div>
-
-                {/* Layer 2: Video/Creative (Middle) */}
+                {/* Layer 1: Records/Creative (Back) - Moved from Middle */}
                 <div
                   className="absolute inset-0 bg-gray-800 border border-gray-600 rounded-xl shadow-2xl overflow-hidden"
-                  style={{ transform: `rotate(-3deg) translateZ(0px) translateX(${tilt.x}px) translateY(${tilt.y}px)` }}
+                  style={{ transform: `rotate(-3deg) translateZ(-50px) translateX(${tilt.x * 1.5}px) translateY(${tilt.y * 1.5}px)` }}
                 >
                   <div className="absolute inset-0 bg-gradient-to-br from-accent-900/20 to-transparent"></div>
                   <div className="h-full flex flex-col justify-center p-6 gap-3">
@@ -474,6 +455,25 @@ const MainPortfolio: React.FC<{ onAdminClick: () => void; onGalleryClick: () => 
                       <span>REC</span>
                       <span>00:04:12</span>
                     </div>
+                  </div>
+                </div>
+
+                {/* Layer 2: Code (Middle) - Moved from Back */}
+                <div
+                  className="absolute inset-0 bg-gray-900 border border-gray-700 rounded-xl shadow-2xl transition-transform duration-200"
+                  style={{ transform: `translateZ(0px) translateX(${tilt.x}px) translateY(${tilt.y}px)` }}
+                >
+                  <div className="h-6 bg-gray-800 border-b border-gray-700 flex items-center px-3 gap-1.5">
+                    <div className="w-2.5 h-2.5 rounded-full bg-red-500/50"></div>
+                    <div className="w-2.5 h-2.5 rounded-full bg-yellow-500/50"></div>
+                    <div className="w-2.5 h-2.5 rounded-full bg-green-500/50"></div>
+                  </div>
+                  <div className="p-4 font-mono text-xs text-primary-300/50 space-y-1">
+                    <p><span className="text-purple-400">const</span> <span className="text-yellow-400">reality</span> = <span className="text-blue-400">new</span> <span className="text-green-400">World</span>();</p>
+                    <p>reality.<span className="text-blue-300">render</span>({'{'}</p>
+                    <p className="pl-4">mode: <span className="text-accent-400">'cinematic'</span>,</p>
+                    <p className="pl-4">ai: <span className="text-purple-400">true</span></p>
+                    <p>{'})'};{'}'}</p>
                   </div>
                 </div>
 

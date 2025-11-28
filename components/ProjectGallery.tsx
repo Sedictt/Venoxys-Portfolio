@@ -7,22 +7,19 @@ interface ProjectGalleryProps {
     onBack: () => void;
 }
 
+const CATEGORIES = ['All', 'Applications', 'Photography', 'Video Editing', 'Graphic Design', 'Art'];
+
 export const ProjectGallery: React.FC<ProjectGalleryProps> = ({ onBack }) => {
     const { data } = usePortfolio();
     const [searchTerm, setSearchTerm] = useState('');
-    const [selectedTech, setSelectedTech] = useState<string | null>(null);
+    const [selectedCategory, setSelectedCategory] = useState('All');
 
-    // Extract all unique technologies from projects
-    const allTechnologies = Array.from(
-        new Set(data.projects.flatMap(p => p.technologies))
-    ).sort();
-
-    // Filter projects based on search and selected tech
+    // Filter projects based on search and selected category
     const filteredProjects = data.projects.filter(project => {
         const matchesSearch = project.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
             project.description.toLowerCase().includes(searchTerm.toLowerCase());
-        const matchesTech = selectedTech ? project.technologies.includes(selectedTech) : true;
-        return matchesSearch && matchesTech;
+        const matchesCategory = selectedCategory === 'All' || project.category === selectedCategory;
+        return matchesSearch && matchesCategory;
     });
 
     return (
@@ -64,27 +61,18 @@ export const ProjectGallery: React.FC<ProjectGalleryProps> = ({ onBack }) => {
                             />
                         </div>
 
-                        {/* Tech Tags */}
+                        {/* Category Tags */}
                         <div className="flex gap-2 overflow-x-auto w-full md:w-auto pb-2 md:pb-0 no-scrollbar">
-                            <button
-                                onClick={() => setSelectedTech(null)}
-                                className={`px-4 py-2 rounded-full text-sm font-medium whitespace-nowrap transition-colors ${selectedTech === null
+                            {CATEGORIES.map(category => (
+                                <button
+                                    key={category}
+                                    onClick={() => setSelectedCategory(category)}
+                                    className={`px-4 py-2 rounded-full text-sm font-medium whitespace-nowrap transition-colors ${selectedCategory === category
                                         ? 'bg-primary-500 text-white'
                                         : 'bg-gray-800 text-gray-400 hover:bg-gray-700 hover:text-white'
-                                    }`}
-                            >
-                                All
-                            </button>
-                            {allTechnologies.map(tech => (
-                                <button
-                                    key={tech}
-                                    onClick={() => setSelectedTech(tech === selectedTech ? null : tech)}
-                                    className={`px-4 py-2 rounded-full text-sm font-medium whitespace-nowrap transition-colors ${selectedTech === tech
-                                            ? 'bg-primary-500 text-white'
-                                            : 'bg-gray-800 text-gray-400 hover:bg-gray-700 hover:text-white'
                                         }`}
                                 >
-                                    {tech}
+                                    {category}
                                 </button>
                             ))}
                         </div>
@@ -106,6 +94,13 @@ export const ProjectGallery: React.FC<ProjectGalleryProps> = ({ onBack }) => {
                                     alt={project.title}
                                     className="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-700 group-hover:scale-105"
                                 />
+                                {project.category && (
+                                    <div className="absolute top-2 right-2 z-20">
+                                        <span className="bg-black/50 backdrop-blur-md text-white text-xs px-2 py-1 rounded border border-white/10">
+                                            {project.category}
+                                        </span>
+                                    </div>
+                                )}
                             </div>
 
                             {/* Content */}
@@ -162,7 +157,7 @@ export const ProjectGallery: React.FC<ProjectGalleryProps> = ({ onBack }) => {
                     <div className="text-center py-20">
                         <p className="text-gray-500 text-lg">No projects found matching your criteria.</p>
                         <button
-                            onClick={() => { setSearchTerm(''); setSelectedTech(null); }}
+                            onClick={() => { setSearchTerm(''); setSelectedCategory('All'); }}
                             className="mt-4 text-primary-400 hover:text-primary-300"
                         >
                             Clear filters

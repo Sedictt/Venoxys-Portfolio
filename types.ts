@@ -7,6 +7,7 @@ export interface Project {
   imageUrl: string;
   demoUrl?: string;
   repoUrl?: string;
+  category?: 'Applications' | 'Photography' | 'Video Editing' | 'Graphic Design' | 'Art';
 }
 
 export interface Skill {
