@@ -161,7 +161,7 @@ export const NAV_LINKS = [
   { name: 'Home', href: '#home' },
   { name: 'About', href: '#about' },
   { name: 'Services', href: '#services' },
-  { name: 'Tech Stack', href: '#skills' },
   { name: 'Projects', href: '#projects' },
+  { name: 'Tech Stack', href: '#skills' },
   { name: 'Contact', href: '#contact' },
 ];
