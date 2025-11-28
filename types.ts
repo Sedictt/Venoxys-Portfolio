@@ -56,6 +56,10 @@ export interface PortfolioData {
   experience: Experience[];
   education: Education[];
   socials: SocialLink[];
+  philosophy?: {
+    title: string;
+    content: string;
+  };
 }
 
 export interface ChatMessage {

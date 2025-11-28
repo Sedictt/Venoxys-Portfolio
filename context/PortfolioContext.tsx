@@ -17,7 +17,8 @@ interface PortfolioContextType {
 const PortfolioContext = createContext<PortfolioContextType | undefined>(undefined);
 
 export const PortfolioProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  const [data, setData] = useState<PortfolioData>(PORTFOLIO_DATA);
+  // Only track dynamic data in state
+  const [projects, setProjects] = useState<Project[]>(PORTFOLIO_DATA.projects);
   const [isLoading, setIsLoading] = useState(true);
 
   // Load projects from Firestore on mount
@@ -26,18 +27,17 @@ export const PortfolioProvider: React.FC<{ children: React.ReactNode }> = ({ chi
       try {
         const projectsCollection = collection(db, 'projects');
         const snapshot = await getDocs(projectsCollection);
-        const projects = snapshot.docs.map(doc => ({
-          ...doc.data(),
-          id: doc.id
-        })) as Project[];
-        
-        setData(prev => ({
-          ...prev,
-          projects
-        }));
+
+        if (!snapshot.empty) {
+          const loadedProjects = snapshot.docs.map(doc => ({
+            ...doc.data(),
+            id: doc.id
+          })) as Project[];
+
+          setProjects(loadedProjects);
+        }
       } catch (error) {
         console.error('Error loading projects from Firestore:', error);
-        // Fall back to default data if there's an error
       } finally {
         setIsLoading(false);
       }
@@ -46,16 +46,18 @@ export const PortfolioProvider: React.FC<{ children: React.ReactNode }> = ({ chi
     loadProjects();
   }, []);
 
+  // Derive the full data object
+  const data: PortfolioData = {
+    ...PORTFOLIO_DATA,
+    projects: projects
+  };
+
   const addProject = async (project: Project) => {
     try {
       const projectsCollection = collection(db, 'projects');
       const docRef = await addDoc(projectsCollection, project);
-      
-      // Update local state
-      setData(prev => ({
-        ...prev,
-        projects: [{ ...project, id: docRef.id }, ...prev.projects]
-      }));
+
+      setProjects(prev => [{ ...project, id: docRef.id }, ...prev]);
     } catch (error) {
       console.error('Error adding project:', error);
     }
@@ -65,12 +67,8 @@ export const PortfolioProvider: React.FC<{ children: React.ReactNode }> = ({ chi
     try {
       const projectRef = doc(db, 'projects', updatedProject.id);
       await updateDoc(projectRef, updatedProject as any);
-      
-      // Update local state
-      setData(prev => ({
-        ...prev,
-        projects: prev.projects.map(p => p.id === updatedProject.id ? updatedProject : p)
-      }));
+
+      setProjects(prev => prev.map(p => p.id === updatedProject.id ? updatedProject : p));
     } catch (error) {
       console.error('Error updating project:', error);
     }
@@ -80,12 +78,8 @@ export const PortfolioProvider: React.FC<{ children: React.ReactNode }> = ({ chi
     try {
       const projectRef = doc(db, 'projects', projectId);
       await deleteDoc(projectRef);
-      
-      // Update local state
-      setData(prev => ({
-        ...prev,
-        projects: prev.projects.filter(p => p.id !== projectId)
-      }));
+
+      setProjects(prev => prev.filter(p => p.id !== projectId));
     } catch (error) {
       console.error('Error deleting project:', error);
     }
@@ -96,13 +90,13 @@ export const PortfolioProvider: React.FC<{ children: React.ReactNode }> = ({ chi
       // Delete all projects from Firestore
       const projectsCollection = collection(db, 'projects');
       const snapshot = await getDocs(projectsCollection);
-      
+
       for (const doc of snapshot.docs) {
         await deleteDoc(doc.ref);
       }
-      
-      // Reset to default data
-      setData(PORTFOLIO_DATA);
+
+      // Reset to default projects
+      setProjects(PORTFOLIO_DATA.projects);
     } catch (error) {
       console.error('Error resetting data:', error);
     }

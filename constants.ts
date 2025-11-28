@@ -150,7 +150,11 @@ export const PORTFOLIO_DATA: PortfolioData = {
     { platform: "GitHub", url: "https://github.com", iconName: "Github" },
     { platform: "Instagram", url: "https://instagram.com", iconName: "Camera" },
     { platform: "YouTube", url: "https://youtube.com", iconName: "Youtube" },
-  ]
+  ],
+  philosophy: {
+    title: "Why I'm Not Your Average 'Vibe Coder'",
+    content: "I try to use AI thoughtfully, not as a shortcut, but as a tool to help bring my ideas to life. I don’t expect a fully functional app to appear from a single prompt. Instead, I focus on giving clear instructions, breaking tasks into smaller steps, and guiding AI with the concepts I want to explore. In this process, AI becomes more of a collaborator than just a tool, it helps me experiment, refine, and realize ideas that might otherwise take much longer to develop. I see it as a way to enhance my own abilities, learn in the process, and slowly turn my plans into something tangible. Using AI this way has taught me patience, careful thinking, and the importance of guiding technology with intention rather than relying on it blindly."
+  }
 };
 
 export const NAV_LINKS = [
