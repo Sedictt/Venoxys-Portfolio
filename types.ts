@@ -8,6 +8,18 @@ export interface Project {
   demoUrl?: string;
   repoUrl?: string;
   category?: 'Applications' | 'Photography' | 'Video Editing' | 'Graphic Design' | 'Art';
+  developmentTime?: string;
+  aiToolsUsed?: string[];
+  features?: string[];
+  aiDescription?: string;
+  challenge?: string;
+  gallery?: string[];
+  customSlides?: {
+    id: string;
+    title: string;
+    content: string;
+    imageUrl?: string;
+  }[];
 }
 
 export interface Skill {

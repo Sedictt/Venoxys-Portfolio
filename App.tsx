@@ -13,6 +13,8 @@ import { PORTFOLIO_DATA, NAV_LINKS } from './constants';
 
 import { AdminDashboard } from './components/AdminDashboard';
 import { ProjectGallery } from './components/ProjectGallery';
+import { AIShowcase } from './components/AIShowcase';
+import { AILabCMS } from './components/AILabCMS';
 import { PortfolioProvider, usePortfolio } from './context/PortfolioContext';
 import { Skill, Project } from './types';
 
@@ -98,7 +100,7 @@ const ProjectCard: React.FC<{ project: Project; index: number }> = ({ project, i
   );
 };
 
-const MainPortfolio: React.FC<{ onAdminClick: () => void; onGalleryClick: () => void }> = ({ onAdminClick, onGalleryClick }) => {
+const MainPortfolio: React.FC<{ onAdminClick: () => void; onGalleryClick: () => void; onAIShowcaseClick: () => void; onAICMSClick: () => void }> = ({ onAdminClick, onGalleryClick, onAIShowcaseClick, onAICMSClick }) => {
   const { data } = usePortfolio(); // Use context instead of constants
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [activeSection, setActiveSection] = useState('home');
@@ -662,12 +664,20 @@ const MainPortfolio: React.FC<{ onAdminClick: () => void; onGalleryClick: () => 
               <span className="text-primary-500 font-mono text-sm uppercase tracking-widest">Selected Works</span>
               <h2 className="text-4xl md:text-6xl font-bold text-white mt-4 font-display">Featured <br />Projects</h2>
             </div>
-            <button
-              onClick={onGalleryClick}
-              className="hidden md:flex items-center gap-2 text-white border-b border-white pb-1 hover:text-primary-400 hover:border-primary-400 transition-colors"
-            >
-              View Archives
-            </button>
+            <div className="flex gap-6">
+              <button
+                onClick={onAIShowcaseClick}
+                className="hidden md:flex items-center gap-2 text-white border-b border-white pb-1 hover:text-accent-400 hover:border-accent-400 transition-colors"
+              >
+                <Sparkles className="w-4 h-4" /> AI Lab
+              </button>
+              <button
+                onClick={onGalleryClick}
+                className="hidden md:flex items-center gap-2 text-white border-b border-white pb-1 hover:text-primary-400 hover:border-primary-400 transition-colors"
+              >
+                View Archives
+              </button>
+            </div>
           </div>
 
           <div className="space-y-32">
@@ -678,12 +688,20 @@ const MainPortfolio: React.FC<{ onAdminClick: () => void; onGalleryClick: () => 
           </div>
 
           <div className="mt-24 text-center md:hidden">
-            <button
-              onClick={onGalleryClick}
-              className="inline-flex items-center gap-2 text-white border-b border-white pb-1 hover:text-primary-400 hover:border-primary-400 transition-colors"
-            >
-              View All Projects
-            </button>
+            <div className="flex flex-col gap-4 items-center">
+              <button
+                onClick={onAIShowcaseClick}
+                className="inline-flex items-center gap-2 text-white border-b border-white pb-1 hover:text-accent-400 hover:border-accent-400 transition-colors"
+              >
+                <Sparkles className="w-4 h-4" /> Visit AI Lab
+              </button>
+              <button
+                onClick={onGalleryClick}
+                className="inline-flex items-center gap-2 text-white border-b border-white pb-1 hover:text-primary-400 hover:border-primary-400 transition-colors"
+              >
+                View All Projects
+              </button>
+            </div>
           </div>
         </div>
       </section>
@@ -901,6 +919,9 @@ const MainPortfolio: React.FC<{ onAdminClick: () => void; onGalleryClick: () => 
             <button onClick={onAdminClick} className="hover:text-white transition-colors flex items-center gap-1">
               <Lock className="w-3 h-3" /> Admin
             </button>
+            <button onClick={onAICMSClick} className="hover:text-white transition-colors flex items-center gap-1">
+              <Sparkles className="w-3 h-3" /> AI Director
+            </button>
           </div>
         </div>
       </footer>
@@ -920,7 +941,7 @@ const MainPortfolio: React.FC<{ onAdminClick: () => void; onGalleryClick: () => 
 };
 
 const App: React.FC = () => {
-  const [currentView, setCurrentView] = useState<'home' | 'admin' | 'gallery'>('home');
+  const [currentView, setCurrentView] = useState<'home' | 'admin' | 'gallery' | 'ai-showcase' | 'ai-cms'>('home');
 
   return (
     <PortfolioProvider>
@@ -937,6 +958,8 @@ const App: React.FC = () => {
             <MainPortfolio
               onAdminClick={() => setCurrentView('admin')}
               onGalleryClick={() => setCurrentView('gallery')}
+              onAIShowcaseClick={() => setCurrentView('ai-showcase')}
+              onAICMSClick={() => setCurrentView('ai-cms')}
             />
           </motion.div>
         )}
@@ -964,6 +987,31 @@ const App: React.FC = () => {
             className="w-full fixed inset-0 z-50 overflow-y-auto bg-gray-900"
           >
             <ProjectGallery onBack={() => setCurrentView('home')} />
+          </motion.div>
+        )}
+
+        {currentView === 'ai-showcase' && (
+          <motion.div
+            key="ai-showcase"
+            initial={{ opacity: 0, scale: 0.95 }}
+            animate={{ opacity: 1, scale: 1 }}
+            exit={{ opacity: 0, scale: 0.95 }}
+            transition={{ duration: 0.4, ease: "easeOut" }}
+            className="w-full fixed inset-0 z-50 overflow-y-auto bg-gray-900"
+          >
+            <AIShowcase onBack={() => setCurrentView('home')} />
+          </motion.div>
+        )}
+        {currentView === 'ai-cms' && (
+          <motion.div
+            key="ai-cms"
+            initial={{ opacity: 0, scale: 0.95 }}
+            animate={{ opacity: 1, scale: 1 }}
+            exit={{ opacity: 0, scale: 0.95 }}
+            transition={{ duration: 0.4, ease: "easeOut" }}
+            className="w-full fixed inset-0 z-50 overflow-y-auto bg-gray-900"
+          >
+            <AILabCMS onBack={() => setCurrentView('home')} />
           </motion.div>
         )}
       </AnimatePresence>

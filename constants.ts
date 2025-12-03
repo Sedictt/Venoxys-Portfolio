@@ -125,7 +125,17 @@ export const PORTFOLIO_DATA: PortfolioData = {
       imageUrl: "https://picsum.photos/800/600?random=10",
       demoUrl: "#",
       repoUrl: "#",
-      category: 'Applications'
+      category: 'Applications',
+      developmentTime: "2 Weeks",
+      aiToolsUsed: ["GitHub Copilot", "Midjourney"],
+      features: [
+        "Procedurally generated 3D cityscapes",
+        "Reactive audio visualization",
+        "Post-processing bloom and glitch effects",
+        "High-score leaderboard system"
+      ],
+      aiDescription: "Midjourney was instrumental in conceptualizing the visual style, generating mood boards for the cyberpunk aesthetic. GitHub Copilot accelerated the Three.js boilerplate code and helped optimize the procedural generation algorithms, reducing development time by approximately 40%.",
+      challenge: "Creating a performant 3D procedural city in the browser that reacts to audio input in real-time without dropping frames on average hardware."
     },
     {
       id: "p2",
@@ -145,7 +155,17 @@ export const PORTFOLIO_DATA: PortfolioData = {
       imageUrl: "https://picsum.photos/800/600?random=12",
       demoUrl: "#",
       repoUrl: "#",
-      category: 'Applications'
+      category: 'Applications',
+      developmentTime: "3 Days",
+      aiToolsUsed: ["ChatGPT", "V0"],
+      features: [
+        "Masonry grid layout with lazy loading",
+        "Custom lightbox with zoom and pan",
+        "EXIF data extraction and display",
+        "Dark mode support"
+      ],
+      aiDescription: "V0 was used to rapidly prototype the UI components, specifically the masonry grid and lightbox. ChatGPT assisted in writing the complex logic for EXIF data parsing and image optimization strategies.",
+      challenge: "Building a masonry layout that handles images of varying aspect ratios gracefully while maintaining fast load times and smooth transitions."
     }
   ],
   socials: [
