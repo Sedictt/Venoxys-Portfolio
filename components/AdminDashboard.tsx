@@ -1,6 +1,6 @@
 
 import React, { useState } from 'react';
-import { usePortfolio } from '../context/PortfolioContext';
+import { usePortfolio } from '@/context/PortfolioContext';
 import { Project } from '../types';
 import { Plus, Edit2, Trash2, X, Save, ArrowLeft, Image as ImageIcon, Github, ExternalLink, Lock, Upload, Loader2 } from 'lucide-react';
 import { uploadImage } from '../services/cloudinary';
@@ -146,8 +146,15 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({ onBack }) => {
             <h1 className="text-2xl font-display font-bold">Project Manager</h1>
           </div>
           <div className="flex items-center gap-4">
-            <button onClick={resetData} className="text-sm text-red-400 hover:text-red-300 px-4">
-              Reset to Defaults
+            <button
+              onClick={() => {
+                if (window.confirm('This will overwrite the remote database with the current local data. Continue?')) {
+                  resetData();
+                }
+              }}
+              className="text-sm text-primary-400 hover:text-primary-300 px-4 flex items-center gap-2"
+            >
+              <Upload className="w-4 h-4" /> Sync Local Data to DB
             </button>
             <button
               onClick={handleAddClick}

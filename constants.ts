@@ -118,54 +118,41 @@ export const PORTFOLIO_DATA: PortfolioData = {
   ],
   projects: [
     {
-      id: "p1",
-      title: "Neon Horizon",
-      description: "A cyberpunk-themed 3D browser game built with Three.js and React. Players navigate a procedurally generated city to a synthwave soundtrack.",
-      technologies: ["React", "Three.js", "WebGL", "Blender"],
-      imageUrl: "https://picsum.photos/800/600?random=10",
-      demoUrl: "#",
+      id: "p-librowse",
+      title: "Librowse",
+      description: "A comprehensive book lending and borrowing platform for PLV, featuring real-time availability tracking, smart recommendations, and an integrated AI chat assistant.",
+      technologies: ["React", "Node.js", "MongoDB", "Socket.io"],
+      imageUrl: "/projects/librowse/Librowse_Home_Page.png",
+      demoUrl: "https://librowse.onrender.com",
       repoUrl: "#",
       category: 'Applications',
-      developmentTime: "2 Weeks",
-      aiToolsUsed: ["GitHub Copilot", "Midjourney"],
+      developmentTime: "3 Months",
+      aiToolsUsed: ["ChatGPT", "GitHub Copilot"],
       features: [
-        "Procedurally generated 3D cityscapes",
-        "Reactive audio visualization",
-        "Post-processing bloom and glitch effects",
-        "High-score leaderboard system"
+        "Real-time book availability tracking",
+        "Integrated AI Chat Assistant",
+        "Daily check-in & gamification system",
+        "Automated violation monitoring & reporting"
       ],
-      aiDescription: "Midjourney was instrumental in conceptualizing the visual style, generating mood boards for the cyberpunk aesthetic. GitHub Copilot accelerated the Three.js boilerplate code and helped optimize the procedural generation algorithms, reducing development time by approximately 40%.",
-      challenge: "Creating a performant 3D procedural city in the browser that reacts to audio input in real-time without dropping frames on average hardware."
-    },
-    {
-      id: "p2",
-      title: "Cinematic Reel 2024",
-      description: "A compilation of my best work in cinematography and video editing, featuring color grading, motion graphics, and sound design.",
-      technologies: ["Premiere Pro", "After Effects", "DaVinci Resolve"],
-      imageUrl: "https://picsum.photos/800/600?random=11",
-      demoUrl: "#",
-      repoUrl: "#",
-      category: 'Video Editing'
-    },
-    {
-      id: "p3",
-      title: "Lens & Light Portfolio",
-      description: "A high-performance photography gallery featuring masonry layouts, lazy loading, and lightbox interactions.",
-      technologies: ["Next.js", "Tailwind CSS", "Framer Motion"],
-      imageUrl: "https://picsum.photos/800/600?random=12",
-      demoUrl: "#",
-      repoUrl: "#",
-      category: 'Applications',
-      developmentTime: "3 Days",
-      aiToolsUsed: ["ChatGPT", "V0"],
-      features: [
-        "Masonry grid layout with lazy loading",
-        "Custom lightbox with zoom and pan",
-        "EXIF data extraction and display",
-        "Dark mode support"
-      ],
-      aiDescription: "V0 was used to rapidly prototype the UI components, specifically the masonry grid and lightbox. ChatGPT assisted in writing the complex logic for EXIF data parsing and image optimization strategies.",
-      challenge: "Building a masonry layout that handles images of varying aspect ratios gracefully while maintaining fast load times and smooth transitions."
+      aiDescription: "AI was utilized to generate the initial database schema and API endpoints. The chat assistant logic was refined using LLMs to provide accurate book recommendations based on user history.",
+      challenge: "Implementing a real-time notification system for due dates and chat messages that scales efficiently with a large user base.",
+      gallery: [
+        "/projects/librowse/Librowse_Home_Page.png",
+        "/projects/librowse/Librowse_Books_Page.png",
+        "/projects/librowse/Librowse_Chat_Modal.png",
+        "/projects/librowse/Librowse_Chats_Page.png",
+        "/projects/librowse/Librowse_Daily_Check-in_Modal.png",
+        "/projects/librowse/Librowse_Modal.png",
+        "/projects/librowse/Librowse_Monitoring_Page.png",
+        "/projects/librowse/Librowse_My_Books_Tab.png",
+        "/projects/librowse/Librowse_Notification_Modal.png",
+        "/projects/librowse/Librowse_Profile_Page.png",
+        "/projects/librowse/Librowse_Request_Page.png",
+        "/projects/librowse/Librowse_Reviews_Tab.png",
+        "/projects/librowse/Librowse_Settings_Tab.png",
+        "/projects/librowse/Librowse_Verification_Tab.png",
+        "/projects/librowse/Librowse_Violations_Tab.png"
+      ]
     }
   ],
   socials: [
