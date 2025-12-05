@@ -2,8 +2,9 @@
 import React, { useState } from 'react';
 import { usePortfolio } from '@/context/PortfolioContext';
 import { Project } from '../types';
-import { Plus, Edit2, Trash2, X, Save, ArrowLeft, Image as ImageIcon, Github, ExternalLink, Lock, Upload, Loader2 } from 'lucide-react';
+import { Plus, Edit2, Trash2, X, Save, ArrowLeft, Image as ImageIcon, Github, ExternalLink, Lock, Upload, Loader2, Sparkles } from 'lucide-react';
 import { uploadImage } from '../services/cloudinary';
+import { generateProjectDetails } from '../services/gemini';
 
 interface AdminDashboardProps {
   onBack: () => void;
@@ -24,13 +25,16 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({ onBack }) => {
     technologies: [],
     imageUrl: '',
     demoUrl: '',
-    repoUrl: ''
+    repoUrl: '',
+    category: 'Applications'
   };
   const [formData, setFormData] = useState<Project>(initialFormState);
+  const [category, setCategory] = useState<string>('Applications');
   const [techInput, setTechInput] = useState('');
   const [aiToolsInput, setAiToolsInput] = useState('');
   const [featuresInput, setFeaturesInput] = useState('');
   const [isUploading, setIsUploading] = useState(false);
+  const [isGenerating, setIsGenerating] = useState(false);
 
   const handleLogin = (e: React.FormEvent) => {
     e.preventDefault();
@@ -63,6 +67,33 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({ onBack }) => {
   const handleDeleteClick = (id: string) => {
     if (window.confirm('Are you sure you want to delete this project?')) {
       deleteProject(id);
+    }
+  };
+
+  const handleAutoGenerate = async () => {
+    setIsGenerating(true);
+    try {
+      const details = await generateProjectDetails(formData.title, category);
+      setFormData(prev => ({
+        ...prev,
+        title: details.title,
+        description: details.description,
+        technologies: details.technologies,
+        aiToolsUsed: details.aiToolsUsed,
+        features: details.features,
+        developmentTime: details.developmentTime,
+        demoUrl: details.demoUrl || prev.demoUrl,
+        repoUrl: details.repoUrl || prev.repoUrl,
+        aiDescription: details.aiDescription
+      }));
+      setTechInput(details.technologies.join(', '));
+      setAiToolsInput(details.aiToolsUsed.join(', '));
+      setFeaturesInput(details.features.join(', '));
+    } catch (error) {
+      console.error(error);
+      alert("Failed to generate details. Please ensure your API Key is set in .env.");
+    } finally {
+      setIsGenerating(false);
     }
   };
 
@@ -229,7 +260,36 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({ onBack }) => {
             <form onSubmit={handleSubmit} className="p-6 space-y-6">
               <div className="grid md:grid-cols-2 gap-6">
                 <div className="space-y-2">
-                  <label className="text-xs font-mono text-gray-500 uppercase">Project Title</label>
+                  <div className="flex justify-between items-center mb-1">
+                    <label className="text-xs font-mono text-gray-500 uppercase">Project Type</label>
+                  </div>
+                  <select
+                    value={category}
+                    onChange={(e) => {
+                      setCategory(e.target.value);
+                      setFormData({ ...formData, category: e.target.value as any });
+                    }}
+                    className="w-full bg-gray-900 border border-gray-700 rounded-lg px-4 py-2 text-white focus:border-primary-500 focus:outline-none mb-4"
+                  >
+                    <option value="Applications">Application</option>
+                    <option value="Photography">Photography</option>
+                    <option value="Video Editing">Video Editing</option>
+                    <option value="Graphic Design">Graphic Design</option>
+                    <option value="Art">Art</option>
+                  </select>
+
+                  <div className="flex justify-between items-center">
+                    <label className="text-xs font-mono text-gray-500 uppercase">Project Title</label>
+                    <button
+                      type="button"
+                      onClick={handleAutoGenerate}
+                      disabled={isGenerating}
+                      className="text-xs flex items-center gap-1 text-primary-400 hover:text-primary-300 transition-colors disabled:opacity-50"
+                    >
+                      {isGenerating ? <Loader2 className="w-3 h-3 animate-spin" /> : <Sparkles className="w-3 h-3" />}
+                      {formData.title ? 'Auto-Complete' : 'Auto-Generate Idea'}
+                    </button>
+                  </div>
                   <input
                     required
                     type="text"
