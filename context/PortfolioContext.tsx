@@ -40,28 +40,23 @@ export const PortfolioProvider: React.FC<{ children: React.ReactNode }> = ({ chi
                     //    because the DB might not have it yet.
                     // 3. STRICT FILTER: Only allow projects that exist in PORTFOLIO_DATA to be displayed.
 
-                    const allowedProjectIds = new Set(PORTFOLIO_DATA.projects.map(p => p.id));
-                    const allowedProjectTitles = new Set(PORTFOLIO_DATA.projects.map(p => p.title));
+                    const mergedProjects = loadedProjects.map(p => {
+                        // Find matching local project by ID or Title
+                        const localMatch = PORTFOLIO_DATA.projects.find(local =>
+                            local.id === p.id || local.title === p.title
+                        );
 
-                    const mergedProjects = loadedProjects
-                        .filter(p => allowedProjectIds.has(p.id) || allowedProjectTitles.has(p.title))
-                        .map(p => {
-                            // Find matching local project by ID or Title
-                            const localMatch = PORTFOLIO_DATA.projects.find(local =>
-                                local.id === p.id || local.title === p.title
-                            );
-
-                            if (localMatch) {
-                                return {
-                                    ...p,
-                                    // Ensure gallery is present if missing in DB but exists locally
-                                    gallery: p.gallery && p.gallery.length > 0 ? p.gallery : localMatch.gallery,
-                                    // Ensure imageUrl is present (local might have the updated path)
-                                    imageUrl: p.imageUrl || localMatch.imageUrl
-                                };
-                            }
-                            return p;
-                        });
+                        if (localMatch) {
+                            return {
+                                ...p,
+                                // Ensure gallery is present if missing in DB but exists locally
+                                gallery: p.gallery && p.gallery.length > 0 ? p.gallery : localMatch.gallery,
+                                // Ensure imageUrl is present (local might have the updated path)
+                                imageUrl: p.imageUrl || localMatch.imageUrl
+                            };
+                        }
+                        return p;
+                    });
 
                     // Also add any local projects that are completely missing from DB (by ID and Title)
                     const missingLocalProjects = PORTFOLIO_DATA.projects.filter(local =>
