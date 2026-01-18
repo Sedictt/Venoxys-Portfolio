@@ -159,7 +159,7 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({ onBack }) => {
               Back to Portfolio
             </button>
           </form>
-          <p className="mt-4 text-xs text-center text-gray-600">Hint: admin123</p>
+
         </div>
       </div>
     );

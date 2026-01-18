@@ -42,6 +42,7 @@ export const AILabCMS: React.FC<AILabCMSProps> = ({ onBack }) => {
     const [featuresInput, setFeaturesInput] = useState('');
     const [isUploading, setIsUploading] = useState(false);
     const [isGenerating, setIsGenerating] = useState(false);
+    const [draggedIndex, setDraggedIndex] = useState<number | null>(null);
 
     // Filter only AI projects
     const aiProjects = data.projects.filter(p => p.aiToolsUsed && p.aiToolsUsed.length > 0);
@@ -100,7 +101,7 @@ export const AILabCMS: React.FC<AILabCMSProps> = ({ onBack }) => {
 
         setIsUploading(true);
         try {
-            const uploadPromises = Array.from(files).map(file => uploadImage(file));
+            const uploadPromises = Array.from(files).map((file: File) => uploadImage(file));
             const uploadedUrls = await Promise.all(uploadPromises);
             setFormData(prev => ({
                 ...prev,
@@ -185,6 +186,23 @@ export const AILabCMS: React.FC<AILabCMSProps> = ({ onBack }) => {
         }
     };
 
+    const handleDragStart = (index: number) => {
+        setDraggedIndex(index);
+    };
+
+    const handleDragOver = (e: React.DragEvent) => {
+        e.preventDefault();
+    };
+
+    const handleDrop = (index: number) => {
+        if (draggedIndex === null) return;
+        const newGallery = [...(formData.gallery || [])];
+        const [movedItem] = newGallery.splice(draggedIndex, 1);
+        newGallery.splice(index, 0, movedItem);
+        setFormData(prev => ({ ...prev, gallery: newGallery }));
+        setDraggedIndex(null);
+    };
+
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
         const technologies = techInput.split(',').map(t => t.trim()).filter(t => t !== '');
@@ -239,7 +257,7 @@ export const AILabCMS: React.FC<AILabCMSProps> = ({ onBack }) => {
                             Back to Portfolio
                         </button>
                     </form>
-                    <p className="mt-4 text-xs text-center text-gray-600">Hint: admin123</p>
+
                 </div>
             </div>
         );
@@ -427,8 +445,16 @@ export const AILabCMS: React.FC<AILabCMSProps> = ({ onBack }) => {
                                             </label>
                                             <div className="grid grid-cols-4 gap-2">
                                                 {formData.gallery?.map((img, idx) => (
-                                                    <div key={idx} className="relative aspect-square bg-gray-800 rounded-lg overflow-hidden border border-gray-700 group">
-                                                        <img src={img} alt={`Gallery ${idx}`} className="w-full h-full object-cover" />
+                                                    <div
+                                                        key={idx}
+                                                        draggable
+                                                        onDragStart={() => handleDragStart(idx)}
+                                                        onDragOver={handleDragOver}
+                                                        onDrop={() => handleDrop(idx)}
+                                                        onDragEnd={() => setDraggedIndex(null)}
+                                                        className={`relative aspect-square bg-gray-800 rounded-lg overflow-hidden border border-gray-700 group cursor-move transition-opacity ${draggedIndex === idx ? 'opacity-40' : 'opacity-100'}`}
+                                                    >
+                                                        <img src={img} alt={`Gallery ${idx}`} className="w-full h-full object-cover pointer-events-none" />
                                                         <button
                                                             type="button"
                                                             onClick={() => setFormData(prev => ({ ...prev, gallery: prev.gallery?.filter((_, i) => i !== idx) }))}

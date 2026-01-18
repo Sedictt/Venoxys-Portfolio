@@ -59,11 +59,7 @@ export const PortfolioProvider: React.FC<{ children: React.ReactNode }> = ({ chi
                     });
 
                     // Also add any local projects that are completely missing from DB (by ID and Title)
-                    const missingLocalProjects = PORTFOLIO_DATA.projects.filter(local =>
-                        !loadedProjects.some(p => p.id === local.id || p.title === local.title)
-                    );
-
-                    setProjects([...mergedProjects, ...missingLocalProjects]);
+                    setProjects(mergedProjects);
                 } else {
                     // Fallback to local data if DB is empty
                     setProjects(PORTFOLIO_DATA.projects);
@@ -100,7 +96,9 @@ export const PortfolioProvider: React.FC<{ children: React.ReactNode }> = ({ chi
     const updateProject = async (updatedProject: Project) => {
         try {
             const projectRef = doc(db, 'projects', updatedProject.id);
-            await updateDoc(projectRef, updatedProject as any);
+            // Use setDoc instead of updateDoc to ensure it works even if the doc 
+            // doesn't exist yet (e.g. for local default projects)
+            await setDoc(projectRef, updatedProject, { merge: true });
 
             setProjects(prev => prev.map(p => p.id === updatedProject.id ? updatedProject : p));
         } catch (error) {

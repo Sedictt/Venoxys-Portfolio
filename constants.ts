@@ -124,7 +124,6 @@ export const PORTFOLIO_DATA: PortfolioData = {
       technologies: ["React", "Node.js", "MongoDB", "Socket.io"],
       imageUrl: "/projects/librowse/Librowse_Home_Page.png",
       demoUrl: "https://librowse.onrender.com",
-      repoUrl: "#",
       category: 'Applications',
       developmentTime: "3 Months",
       aiToolsUsed: ["ChatGPT", "GitHub Copilot"],
@@ -152,6 +151,43 @@ export const PORTFOLIO_DATA: PortfolioData = {
         "/projects/librowse/Librowse_Settings_Tab.png",
         "/projects/librowse/Librowse_Verification_Tab.png",
         "/projects/librowse/Librowse_Violations_Tab.png"
+      ]
+    },
+    {
+      id: "p-itsourstudio",
+      title: "ItsOurStudio",
+      description: "A comprehensive studio management platform and portfolio website featuring a booking system, admin dashboard, and content management.",
+      technologies: ["React", "TypeScript", "Tailwind CSS", "Node.js", "Firebase"],
+      imageUrl: "/projects/itsourstudio/Hero Section.png",
+      category: 'Applications',
+      developmentTime: "2 Months",
+      aiToolsUsed: ["GitHub Copilot", "ChatGPT"],
+      features: [
+        "Comprehensive Admin Dashboard",
+        "Online Booking System with Calendar",
+        "Dynamic Gallery Management",
+        "Customer Feedback & Testimonials",
+        "Service Packages & Analytics"
+      ],
+      aiDescription: "AI was leveraged to rapidly prototype the admin dashboard components and generate the initial database schema for the booking system.",
+      challenge: "Building a unified system that handles both public-facing portfolio showcase and internal business operations seamlessly.",
+      gallery: [
+        "/projects/itsourstudio/Gallery Page.png",
+        "/projects/itsourstudio/Services Page.png",
+        "/projects/itsourstudio/About Section.png",
+        "/projects/itsourstudio/Contact Section.png",
+        "/projects/itsourstudio/Analytics - Admin Dashboard.png",
+        "/projects/itsourstudio/Bookings - Admin Dashboard.png",
+        "/projects/itsourstudio/CMS - Admin Dashboard.png",
+        "/projects/itsourstudio/Calendar - Admin Dashboard.png",
+        "/projects/itsourstudio/Feedback Management - Admin Dashboard.png",
+        "/projects/itsourstudio/Gallery Manager - Admin Dashboard.png",
+        "/projects/itsourstudio/RBMS - Admin Dashboard.png",
+        "/projects/itsourstudio/Reports Management - Admin Dashboard.png",
+        "/projects/itsourstudio/Package Section.png",
+        "/projects/itsourstudio/Testimonial Section.png",
+        "/projects/itsourstudio/BackDrop Preview Section.png",
+        "/projects/itsourstudio/IMage Carousel Section.png"
       ]
     }
   ],
